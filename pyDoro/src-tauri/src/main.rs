@@ -1,10 +1,23 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+struct times{
+  work: i32, 
+  short: i32, 
+  long: i32,
+}
+impl times{
+  fn new( work: i32, short: i32, long: i32) -> times{
+    times{work: work, short: short, long: long}
+  }
+}
+
+// static mut current_times:times = times::new(60, 5, 10);
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
-fn greet(work: i32, short: i32, long: i32) -> String {
-    format!("You will be working for {} minutes!\nAfter, you'll take 3 short ({} minute) breaks.\nFollowed by 1 long ({} minute) break!", work, short, long)
+fn takeValues(work: i32, short: i32, long: i32) {
+  let current_times = times::new(work, short, long);
+  println!("Work: {}, Short: {}, Long: {}", current_times.work, current_times.short, current_times.long);
 }
 use tauri::{CustomMenuItem, Menu, MenuItem, Submenu};
 
@@ -23,7 +36,7 @@ fn main() {
 
     tauri::Builder::default()
         .menu(menu)
-        .invoke_handler(tauri::generate_handler![greet])
+        .invoke_handler(tauri::generate_handler![takeValues])
         .on_menu_event(|event| {
             match event.menu_item_id() {
               "quit" => {

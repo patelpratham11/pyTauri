@@ -1,61 +1,29 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
+// import { useNavigate } from 'react-router-dom';
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './Components/Home'
+import Timer from './Components/Timer'
+
+function Root() {
+  return (
+    <div>
+      <Routes>
+          <Route exact path="/" element={<Home/>}/>
+          <Route exact path="/timer" element={<Timer/>}/>
+          <Route exact path="/settings" element={<Timer/>}/>
+          <Route exact path="*" element={<Home/>}/>
+        </Routes>
+    </div>
+  );
+}
 
 function App() {
-  const [work, setWork] = useState(0);
-  const [short, setShort] = useState(0);
-  const [long, setLong] = useState(0);
-
-  const [message, setMessage] = useState("")
-
-  const [currentState, setCurrentState] = useState(null);
-
-
-  async function takeValues() {
-    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-    setMessage(await invoke("greet", {work: Number(work), short: Number(short), long: Number(long)}));
-  }
-
   return (
-    <div className="container">
-      <h1>PyDoro</h1>
-
-      <div className="row">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            takeValues();
-          }}
-        >
-          <input
-            type="number"
-            id="greet-input"
-            onChange={(e) => setWork(e.currentTarget.value)}
-            placeholder="Productive Time"
-          />
-
-          <input
-            type="number"
-            id="greet-input"
-            onChange={(e) => setShort(e.currentTarget.value)}
-            placeholder="Short Break Time"
-          />
-
-          <input
-            type="number"
-            id="greet-input"
-            onChange={(e) => setLong(e.currentTarget.value)}
-            placeholder="Long Break Time"
-          />
-
-          <button type="submit">Submit</button>
-        </form>
-      </div>
-
-      <p>{message}</p>
-    </div>
+    <BrowserRouter>
+      <Root />
+    </BrowserRouter>
   );
 }
 

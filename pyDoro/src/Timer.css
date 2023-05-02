@@ -1,0 +1,25 @@
+.Clock{
+    border: 3px solid white;
+    border-radius: 100px;
+    margin: 2%;
+    height: 10vh;
+    width: 96%;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+}
+
+
+.Clock-sofar{
+    height: inherit;
+    border-radius: 100px;
+    background-Color: red;
+    display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: start;
+} 
+
+.time-left{
+    text-align: center;
+}
