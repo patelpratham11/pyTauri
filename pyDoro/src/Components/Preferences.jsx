@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { invoke } from "@tauri-apps/api/tauri";
+import { ask } from '@tauri-apps/api/dialog';
 import "../App.css";
-
-function Home() {
+// added a comment
+function Preferences() {
   const navigate = useNavigate();
   const [work, setWork] = useState(0);
   const [short, setShort] = useState(0);
@@ -13,8 +14,11 @@ function Home() {
 
   async function takeValues() {
     // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-    await invoke("takeValues", {work: Number(work), short: Number(short), long: Number(long)});
-    navigate('/timer');
+    // await invoke("takeValues", {work: Number(work), short: Number(short), long: Number(long)});
+    // navigate('/timer');
+    await invoke("takeValues", { work: Number(work), short: Number(short), long: Number(long) })
+    await invoke("getValues")
+    .then((message) => console.log(message))
   }
 
   return (
@@ -56,4 +60,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Preferences;
