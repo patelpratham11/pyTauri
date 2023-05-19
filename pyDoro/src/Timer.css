@@ -20,6 +20,6 @@
   align-items: start;
 } 
 
-.time-left{
+.time-left, .buttons{
     text-align: center;
 }

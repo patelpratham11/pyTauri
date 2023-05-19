@@ -17,8 +17,6 @@ function Preferences() {
     // await invoke("takeValues", {work: Number(work), short: Number(short), long: Number(long)});
     // navigate('/timer');
     await invoke("takeValues", { work: Number(work), short: Number(short), long: Number(long) })
-    await invoke("getValues")
-    .then((message) => console.log(message))
   }
 
   return (

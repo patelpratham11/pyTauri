@@ -45,7 +45,7 @@
     "windows": [
       {
         "fullscreen": false,
-        "resizable": false,
+        "resizable": true,
         "title": "pyDoro",
         "width": 800,
         "height": 350,
