@@ -1,50 +1,52 @@
 import "../Timer.css";
 import { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { invoke } from "@tauri-apps/api/tauri";
+import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 
 function secondary() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   let timer;
   const [pauseButton, setPauseButton] = useState("---");
   const [startButton, setStartButton] = useState("Start");
-  const [time, setTime] = useState();
-  var timeVal; 
+  const [time, setTime] = useState(0);
+  const [isTime, setIsTime] = useState(false);
+  const [originalTime, setOriginalTime] = useState()
   const [message, setMessage] = useState("");
   const [on, setOn] = useState(false);
 
   useEffect(()=>{
-    () => getVals();
+    invoke("getValues").then((message) =>{
+      setOriginalTime(Number(message.split(",")[0]));
+      console.log('time rn', time)
+      setTime(originalTime);
+      console.log(time);
+    }, [])
+
+    
+      
   }, [])
 
   useEffect(() => {
+    console.log('here now')
     if( time > 0 ){
       if (on){
         setPauseButton("Pause");
         setStartButton("Reset");
-        timer = setTimeout(() => setTime(time - 1), 1000);
-        console.log(time)
-        setOn(true);
       } else{
         setPauseButton("Resume")
       }
     } else{
       setOn(false);
       setMessage("done")
-      clearTimeout(timer)
+      clearTimeout(timer);
     }
   }, [time, on]);
-  
 
-  async function getVals() {
-      await invoke("getValues")
-      .then((message) => {
-      timeVal = Number(message.split(",")[0]);
-      console.log(timeVal, typeof(timeVal))
-      setTime(timeVal);
-      })
-
+  const updateData = () => {
+    invoke("updateGlobal", {session: 0, amount: originalTime}).then(console.log("hi"));
   }
+
   const pauseUnpause = () =>{
     setOn(!on); 
     if(on){
@@ -56,7 +58,8 @@ function secondary() {
 
   const startRestart = () =>{
     clearTimeout(timer);
-    setTime(10);
+    console.log("timeval rn", originalTime)
+    setTime(originalTime);
     setOn(true);
   }
   
@@ -65,7 +68,23 @@ function secondary() {
     <div className="timer-container">
       <h1>Timer</h1>
       <div className="Clock">
-        <div className="Clock-sofar" style={{'width': `${(1-(time/10))*100}%`}}></div>
+          <CountdownCircleTimer
+          // key={on}
+          isPlaying = {on}
+          duration={time}
+          colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+          colorsTime={[2]}
+          onComplete={()=> {
+            setOn(false);
+            setPauseButton("---");
+            setStartButton("Start");
+          }}
+          onUpdate={()=>{
+            setOn(true)
+          }}
+      >
+        {({ remainingTime }) => remainingTime}
+      </CountdownCircleTimer>
       </div>
       <div className="time-left">
         <h3>Time Left: {time}</h3>
@@ -74,6 +93,7 @@ function secondary() {
         <button onClick={() => pauseUnpause()}>{pauseButton}</button>
         <button onClick={() => startRestart()}>{startButton}</button>
       </div>
+      {message}
     </div>
   );
 }

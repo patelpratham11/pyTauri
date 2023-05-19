@@ -10,8 +10,10 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@sujitsimon/react-flipclock": "^0.1.2",
     "@tauri-apps/api": "^1.2.0",
     "react": "^18.2.0",
+    "react-countdown-circle-timer": "^3.2.1",
     "react-dom": "^18.2.0",
     "react-router": "^6.11.0",
     "react-router-dom": "^6.11.0"
