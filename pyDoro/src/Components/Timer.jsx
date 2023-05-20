@@ -6,21 +6,19 @@ import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 
 function secondary() {
   // const navigate = useNavigate();
-  let timer;
+
   const [pauseButton, setPauseButton] = useState("---");
   const [startButton, setStartButton] = useState("Start");
   const [time, setTime] = useState(0);
-  const [isTime, setIsTime] = useState(false);
-  const [originalTime, setOriginalTime] = useState()
-  const [message, setMessage] = useState("");
+  const [reset, setReset] = useState(0);
+  const [originalTime, setOriginalTime] = useState(12)
   const [on, setOn] = useState(false);
 
   useEffect(()=>{
     invoke("getValues").then((message) =>{
       setOriginalTime(Number(message.split(",")[0]));
-      console.log('time rn', time)
-      setTime(originalTime);
-      console.log(time);
+      console.log(time, originalTime)
+      // setTime(originalTime);
     }, [])
 
     
@@ -28,19 +26,16 @@ function secondary() {
   }, [])
 
   useEffect(() => {
-    console.log('here now')
-    if( time > 0 ){
+    // if( time > 0 ){
       if (on){
         setPauseButton("Pause");
         setStartButton("Reset");
       } else{
         setPauseButton("Resume")
       }
-    } else{
-      setOn(false);
-      setMessage("done")
-      clearTimeout(timer);
-    }
+    // } else{
+      // setOn(false);
+    // }
   }, [time, on]);
 
   const updateData = () => {
@@ -57,43 +52,48 @@ function secondary() {
   }
 
   const startRestart = () =>{
-    clearTimeout(timer);
-    console.log("timeval rn", originalTime)
-    setTime(originalTime);
-    setOn(true);
+    // setOn(true);
+    if(startButton === "Start"){
+      setOn(true);
+      setStartButton("Reset");
+    } else{
+      setOn(true);
+      setStartButton("Reset");
+      setReset(reset + 1);
+    }
   }
   
 
   return (
     <div className="timer-container">
-      <h1>Timer</h1>
+      <h1 className="title">Work</h1>
       <div className="Clock">
           <CountdownCircleTimer
-          // key={on}
+          key={reset}
           isPlaying = {on}
-          duration={time}
-          colors={['#004777', '#F7B801', '#A30000', '#A30000']}
-          colorsTime={[2]}
+          duration={originalTime}
+          colors={['#FC814A', '#CAFE48']}
+          trailColor="#57886C"
+          colorsTime={[2, 0]}
+          trailStrokeWidth={10}
           onComplete={()=> {
             setOn(false);
             setPauseButton("---");
             setStartButton("Start");
+            alert("Done")
           }}
           onUpdate={()=>{
-            setOn(true)
+            setTime(originalTime);
+            setOn(true);
           }}
       >
         {({ remainingTime }) => remainingTime}
       </CountdownCircleTimer>
       </div>
-      <div className="time-left">
-        <h3>Time Left: {time}</h3>
-      </div>
       <div className="buttons">
         <button onClick={() => pauseUnpause()}>{pauseButton}</button>
         <button onClick={() => startRestart()}>{startButton}</button>
       </div>
-      {message}
     </div>
   );
 }
